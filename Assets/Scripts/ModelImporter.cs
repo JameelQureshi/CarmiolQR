@@ -93,10 +93,10 @@ public class ModelImporter : MonoBehaviour
         else
         {
             ErrorImage.SetActive(false);
-            int count = MyObject.transform.childCount;
+            int count = loadedObject.transform.childCount;
             for (int i = 0; i < count; i++)
             {
-                MyObject.transform.GetChild(i).GetComponent<Renderer>().material.SetTexture("_MainTex", ((DownloadHandlerTexture)www.downloadHandler).texture);
+                loadedObject.transform.GetChild(i).GetComponent<Renderer>().material.SetTexture("_MainTex", ((DownloadHandlerTexture)www.downloadHandler).texture);
             }
             LoadingPanel.SetActive(false);
             LoadModelInAR();
