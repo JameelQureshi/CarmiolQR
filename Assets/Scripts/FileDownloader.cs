@@ -9,13 +9,11 @@ public class FileDownloader : MonoBehaviour
 {
     public GameObject ErrorImage;
     public Text progress;
-    public Text url;
 
 
     private void Awake()
     {
         ErrorImage.SetActive(false);
-        url.text = PlayerPrefs.GetString("Model_url");
         DeletePreviousData();
         StartCoroutine(GetText());
     }
@@ -80,7 +78,6 @@ public class FileDownloader : MonoBehaviour
         {
             //progress.text = "" + request.downloadProgress;
             progress.text = $"Cargando Modelo...{request.downloadProgress:P}";
-
             yield return null;
         }
     }

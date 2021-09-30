@@ -114,6 +114,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
                         spawnedObject = Instantiate(m_PlacedPrefab, hitPose.position, hitPose.rotation);
                         
                         spawnedObject.transform.localScale = new Vector3(0.003f, 0.003f, 0.003f);
+                        EnableMeshCollider(spawnedObject);
                         StartCoroutine(GetTextureCoroutine(spawnedObject));
                         onContentPlaced.Invoke();
                         Handheld.Vibrate();
@@ -129,11 +130,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
             }
         }
         static List<ARRaycastHit> s_Hits = new List<ARRaycastHit>();
-
         ARRaycastManager m_RaycastManager;
-
-
-
         IEnumerator GetTextureCoroutine(GameObject model)
         {
 
@@ -155,6 +152,14 @@ namespace UnityEngine.XR.ARFoundation.Samples
                     model.transform.GetChild(i).GetComponent<Renderer>().material.SetTexture("_MainTex", ((DownloadHandlerTexture)www.downloadHandler).texture);
                 }
                
+            }
+        }
+        private void EnableMeshCollider(GameObject Myobject)
+        {
+            int count = Myobject.transform.childCount;
+            for (int i = 0; i < count; i++)
+            {
+                Myobject.transform.GetChild(i).transform.GetComponent<MeshRenderer>().enabled = true;
             }
         }
     }

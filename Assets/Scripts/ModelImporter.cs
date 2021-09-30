@@ -30,17 +30,11 @@ public class ModelImporter : MonoBehaviour
     public GameObject LoadingPanel;
     public GameObject ErrorImage;
     public GameObject MyObject;
-
     GameObject loadedObject;
-
     public Text progress;
-
-
-    
-    
     private void Start()
     {
-        
+        AR_Prefab_GameObject.transform.GetComponent<PlaceOnPlane>().enabled = false;
         LoadingPanel.SetActive(true);
         ErrorImage.SetActive(false);
     }
@@ -49,6 +43,7 @@ public class ModelImporter : MonoBehaviour
     {
         progress.text = "Loading Model!";
         string objPath = string.Format("{0}/{1}.obj", Application.persistentDataPath, PlayerPrefs.GetString("code"));
+        //string objPath = string.Format("{0}/{1}.obj", Application.persistentDataPath,"103");
         FileStream fileStream = null;
 
         try
@@ -57,7 +52,6 @@ public class ModelImporter : MonoBehaviour
             using (fileStream = File.Open(objPath, FileMode.OpenOrCreate))
             {
                 loadedObject = new OBJLoader().Load(fileStream);
-                
                 progress.text = "Model Loaded!";
                 LoadModelInAR();
             }
@@ -67,39 +61,6 @@ public class ModelImporter : MonoBehaviour
         {
             progress.text = "" + e;
             return;
-        }
-
-    }
-
-
-
-
-
-
-
-
-    IEnumerator GetTextureCoRoutine()
-    {
-       
-        //UnityWebRequest www = UnityWebRequestTexture.GetTexture("https://carmiolindustrial.com/store_front/ar_assets/objects/101/101.png");
-
-         UnityWebRequest www = UnityWebRequestTexture.GetTexture(PlayerPrefs.GetString("Texture_url"));
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            ErrorImage.SetActive(true);
-            ErrorImage.transform.GetChild(0).GetComponent<Text>().text = "Texture not found";
-        }
-        else
-        {
-            ErrorImage.SetActive(false);
-            int count = loadedObject.transform.childCount;
-            for (int i = 0; i < count; i++)
-            {
-                loadedObject.transform.GetChild(i).GetComponent<Renderer>().material.SetTexture("_MainTex", ((DownloadHandlerTexture)www.downloadHandler).texture);
-            }
-            LoadingPanel.SetActive(false);
-            LoadModelInAR();
         }
     }
     public void LoadModelInAR()
@@ -112,11 +73,14 @@ public class ModelImporter : MonoBehaviour
         resizeY *= MyObject.transform.localScale.y;
         resizeZ *= MyObject.transform.localScale.z;
         MyObject.GetComponent<Transform>().localScale = new Vector3(resizeX, resizeY, resizeZ);*/
-
-        LoadingPanel.SetActive(false);
-
         AR_Prefab_GameObject.SetActive(true);
         AR_Prefab_GameObject.transform.GetComponent<PlaceOnPlane>().enabled = true;
         AR_Prefab_GameObject.transform.GetComponent<PlaceOnPlane>().m_PlacedPrefab = loadedObject;
+        LoadingPanel.SetActive(false);
+        int count = loadedObject.transform.childCount;
+        for (int i = 0; i < count; i++)
+        {
+            loadedObject.transform.GetChild(i).transform.GetComponent<MeshRenderer>().enabled = false;
+        }
     }
 }
