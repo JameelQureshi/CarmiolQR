@@ -9,6 +9,19 @@ using TBEasyWebCam;
 
 public class DeviceCameraController : MonoBehaviour {
 
+	public static DeviceCameraController instance;
+
+	private void Awake()
+	{
+		if (instance != null)
+		{
+			Destroy(gameObject);
+		}
+		else
+		{
+			instance = this;
+		}
+	}
 	public DeviceCamera dWebCam
 	{
 		get
@@ -36,12 +49,14 @@ public class DeviceCameraController : MonoBehaviour {
 
 	void Start()
 	{
-        webcam = new DeviceCamera (isUseEasyWebCam);
+		isUseEasyWebCam = true;
+		webcam = new DeviceCamera (isUseEasyWebCam);
 		e_CameraPlaneObj = transform.Find ("CameraPlane").gameObject;
 		StartWork ();
 	}
 
-	// Update is called once per frame  
+	// Update is called onc
+    // e per frame  
 	void Update()  
 	{  
 		if (webcam != null && webcam.isPlaying()) {
@@ -79,7 +94,8 @@ public class DeviceCameraController : MonoBehaviour {
 	/// </summary>
 	public void StopWork()
 	{
-		if (this.webcam != null && this.webcam.isPlaying()) {
+		if (this.webcam != null && this.webcam.isPlaying())
+		{
 			this.webcam.Stop ();
 		}
 		if(e_CameraPlaneObj.activeSelf)
@@ -146,7 +162,7 @@ public class DeviceCameraController : MonoBehaviour {
     
     IEnumerator waitTimeToOpenCamera()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         StartWork();
     }
 }

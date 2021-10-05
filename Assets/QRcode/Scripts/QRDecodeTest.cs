@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 
 public class QRDecodeTest : MonoBehaviour
 {
+	
 	public QRCodeDecodeController e_qrController;
 	public Text UiText;
 	public static string url_to_pass;
@@ -22,20 +23,20 @@ public class QRDecodeTest : MonoBehaviour
 	/// when you set the var is true,if the result of the decode is web url,it will open with browser.
 	/// </summary>
 	public bool isOpenBrowserIfUrl;
-    private void Start()
-	{
+    private void Awake()
+    {
 		PlayerPrefs.SetString("code", "");
 		PlayerPrefs.SetString("Model_url", "");
 		PlayerPrefs.SetString("Texture_url", "");
 		if (this.e_qrController != null)
 		{
+			
 			this.e_qrController.onQRScanFinished += new QRCodeDecodeController.QRScanFinished(this.qrScanFinished);
 		}
+		Play();
 	}
 
-	private void Update()
-	{
-	}
+
 	private void qrScanFinished(string dataText)
 	{
 		if (isOpenBrowserIfUrl) {
@@ -48,10 +49,13 @@ public class QRDecodeTest : MonoBehaviour
 				Application.OpenURL(dataText);
 			}
 		}
-		//this.UiText.text = dataText;
-		//url_to_pass = dataText;
+	
 		cutString(dataText);
-		SceneManager.LoadScene(1);
+		//System.GC.Collect();
+		//Resources.UnloadUnusedAssets();
+		DeviceCameraController.instance.StopWork();
+		GotoNextScene(1);
+
 		/*if (this.resetBtn != null)
 		{
 			this.resetBtn.SetActive(true);
@@ -109,14 +113,15 @@ public class QRDecodeTest : MonoBehaviour
 		}
 	}
 
-	public void GotoNextScene(string scenename)
+	public void GotoNextScene(int SceneNo)
 	{
 		if (this.e_qrController != null)
 		{
 			this.e_qrController.StopWork();
 		}
 		//Application.LoadLevel(scenename);
-		SceneManager.LoadScene(scenename);
+		this.e_qrController = null;
+		SceneManager.LoadScene(SceneNo);
 	}
 
 	/// <summary>

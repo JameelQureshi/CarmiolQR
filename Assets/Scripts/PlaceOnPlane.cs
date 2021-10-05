@@ -53,10 +53,13 @@ namespace UnityEngine.XR.ARFoundation.Samples
         public void loadScene(int number)
         {
             
+            PlayerPrefs.DeleteAll();
+
             if (number == 0)
             {
                 Destroy(spawnedObject);
                 SceneManager.LoadScene(number);
+  
                 Destroy(this.gameObject);
             }
             SceneManager.LoadScene(number);
@@ -107,7 +110,7 @@ namespace UnityEngine.XR.ARFoundation.Samples
                         //m_PlacedPrefab.GetComponent<Transform>().localScale = new Vector3(resizeX, resizeY, resizeZ);
 
                         m_PlacedPrefab.AddComponent<leantouch.Touch.LeanPinchScale>();
-
+                        m_PlacedPrefab.AddComponent<leantouch.Touch.LeanTwistRotateAxis>();
                         //scal = ((Camera.main.transform.position - transform.position).magnitude) * var;
                         //cube.transform.localScale = new Vector3(scal, scal, scal);
 
